@@ -17,24 +17,25 @@ const (
 	AclProtected = "protected"
 )
 
+// 文件或者目录
 type Matter struct {
-	Id         int64      `json:"id"`
-	Uid        int64      `json:"uid" gorm:"not null"`
-	Sid        int64      `json:"sid" gorm:"not null"` // storage_id
-	Alias      string     `json:"alias" gorm:"size:16;not null"`
-	Name       string     `json:"name" gorm:"not null"`
-	Type       string     `json:"type" gorm:"not null"`
-	Size       int64      `json:"size" gorm:"not null"`
-	DirType    int8       `json:"dirtype" gorm:"column:dirtype;not null"`
-	Parent     string     `json:"parent" gorm:"not null"`
-	Object     string     `json:"object" gorm:"not null"`
-	ACL        string     `json:"acl" gorm:"not null"`
-	URL        string     `json:"url" gorm:"-"`
-	CreatedAt  time.Time  `json:"created" gorm:"not null"`
-	UpdatedAt  time.Time  `json:"updated" gorm:"not null"`
-	UploadedAt *time.Time `json:"uploaded"`
-	DeletedAt  *time.Time `json:"-"`
-	TrashedBy  string     `json:"-" gorm:"size:16;not null"`
+	Id         int64      `json:"id"`                                     // id 主键
+	Uid        int64      `json:"uid" gorm:"not null"`                    // 用户 id
+	Sid        int64      `json:"sid" gorm:"not null"`                    // storage_id  storeage 的主键
+	Alias      string     `json:"alias" gorm:"size:16;not null"`          // 别名 slug
+	Name       string     `json:"name" gorm:"not null"`                   // 文件名 目录名
+	Type       string     `json:"type" gorm:"not null"`                   // application/pdf 等
+	Size       int64      `json:"size" gorm:"not null"`                   // 文件大小，单位 bit
+	DirType    int8       `json:"dirtype" gorm:"column:dirtype;not null"` // 目录类型
+	Parent     string     `json:"parent" gorm:"not null"`                 // 父 Matter 的 name
+	Object     string     `json:"object" gorm:"not null"`                 //  fmt.Sprintf("%s/%s%s", prefix, m.Alias, filepath.Ext(p.Name))  prefix = 日期20101010
+	ACL        string     `json:"acl" gorm:"not null"`                    // 权限类型（public、protected）
+	URL        string     `json:"url" gorm:"-"`                           // 文件 url
+	CreatedAt  time.Time  `json:"created" gorm:"not null"`                // 创建时间
+	UpdatedAt  time.Time  `json:"updated" gorm:"not null"`                // 更新时间
+	UploadedAt *time.Time `json:"uploaded"`                               // 上传时间
+	DeletedAt  *time.Time `json:"-"`                                      // 删除时间
+	TrashedBy  string     `json:"-" gorm:"size:16;not null"`              // 谁放到回收站的
 }
 
 func NewMatter(uid, sid int64, name string) *Matter {
